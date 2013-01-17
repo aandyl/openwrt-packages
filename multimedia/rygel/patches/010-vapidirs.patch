@@ -1,0 +1,12 @@
+--- a/m4/rygel.m4
++++ b/m4/rygel.m4
+@@ -110,6 +110,9 @@ AC_DEFUN([RYGEL_CHECK_VALA],
+           [dnl check for vala
+            AM_PROG_VALAC([$1])
+ 
++            RYGEL_ADD_VALAFLAGS([--vapidir $STAGING_DIR/usr/share/vala/vapi])
++            RYGEL_ADD_VALAFLAGS([--vapidir $STAGING_DIR/usr/share/vala-0.16/vapi])
++
+             AS_IF([test x$VALAC = "x"],
+                 [AC_MSG_ERROR([Cannot find the "valac" compiler in your PATH])],
+                 [

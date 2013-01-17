@@ -1,9 +1,14 @@
-Take all the output and send it to syslog.
-This isn't great, but it's better than sending it to the bitbucket, at least
-for troubleshooting.
---- a/src/rygel/rygel-log-handler.vala
-+++ b/src/rygel/rygel-log-handler.vala
-@@ -56,6 +56,29 @@
+--- a/src/librygel-core/rygel-log-handler.vala
++++ b/src/librygel-core/rygel-log-handler.vala
+@@ -22,6 +22,7 @@
+  */
+ 
+ using Gee;
++using Posix;
+ 
+ public enum Rygel.LogLevel {
+     INVALID = 0,
+@@ -56,6 +57,29 @@ public class Rygel.LogHandler : GLib.Obj
      private LogHandler () {
          this.log_level_hash = new HashMap<string,LogLevelFlags> ();
  
@@ -33,3 +38,13 @@ for troubleshooting.
          // Get the allowed log levels from the config
          var config = MetaConfig.get_default ();
          string log_levels;
+--- a/src/librygel-core/Makefile.am
++++ b/src/librygel-core/Makefile.am
+@@ -14,6 +14,7 @@ librygel_core_2_0_la_SOURCES = \
+ librygel_core_2_0_la_VALAFLAGS = \
+ 	-H rygel-core.h -C --library=rygel-core-2.0 \
+ 	--vapidir=$(srcdir) \
++	--pkg posix \
+ 	--pkg uuid \
+ 	$(LIBRYGEL_CORE_DEPS_VALAFLAGS) \
+ 	$(RYGEL_COMMON_VALAFLAGS)

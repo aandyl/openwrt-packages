@@ -8,15 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rygel
-PKG_VERSION:=0.14.1
+PKG_VERSION:=0.18.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=@GNOME/rygel/0.14/
-PKG_SHA256SUM:=c4f79fb30bc1a062a2ffdadc7a55dd91fa58240302f152fb070d8c674bdddd67
+PKG_SOURCE_URL:=@GNOME/rygel/0.18/
+PKG_MD5SUM:=fd7bdb0562b82b1ed4ceb40e5fa89f6d
 
 PKG_FIXUP:=autoreconf
-PKG_BUILD_DEPENDS:=vala/host intltool/host vala gupnp-vala
+PKG_BUILD_DEPENDS:=vala/host intltool/host vala
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
@@ -37,9 +37,8 @@ define Package/rygel/description/Default
 endef
 
 define Package/rygel
-$(call Package/rygel/Default)
-  DEPENDS:=+libgssdp +libgupnp +libgupnp-av +libgupnp-dlna +libgee \
-    +libsoup +gstreamer +libgstvideo +libgstpbutils
+  $(call Package/rygel/Default)
+  DEPENDS:=+librygel-core +librygel-server
 endef
 
 define Package/rygel/conffiles
@@ -52,6 +51,70 @@ $(call Package/rygel/description/Default)
  This package contains the main rygel binary.
 endef
 
+define Package/librygel-core
+  $(call Package/rygel/Default)
+  TITLE+= - core library
+  DEPENDS:=+libgssdp +libgupnp +libgupnp-av +libgupnp-dlna +libgee +libsoup \
+           +gstreamer +libgstvideo +libgstpbutils
+endef
+
+define Package/librygel-core/description
+$(call Package/rygel/description/Default)
+ .
+ This package contains the librygel-core library.
+endef
+
+define Package/librygel-renderer
+  $(call Package/rygel/Default)
+  TITLE+= - media renderer library
+  DEPENDS:=+librygel-core
+endef
+
+define Package/librygel-renderer/description
+$(call Package/rygel/description/Default)
+ .
+ This package contains the librygel-renderer library, which is used by the
+ playbin (media renderer) plugin.
+endef
+
+define Package/librygel-renderer-gst
+  $(call Package/rygel/Default)
+  TITLE+= - media renderer library (GStreamer)
+  DEPENDS:=+librygel-core +librygel-renderer
+endef
+
+define Package/librygel-renderer-gst/description
+$(call Package/rygel/description/Default)
+ .
+ This package contains the librygel-renderer-gst library, which provides
+ GStreamer support for the playbin (media renderer) plugin.
+endef
+
+define Package/librygel-server
+  $(call Package/rygel/Default)
+  TITLE+= - media server library
+  DEPENDS:=+librygel-core
+endef
+
+define Package/librygel-server/description
+$(call Package/rygel/description/Default)
+ .
+ This package contains the librygel-server library, which is used by the media
+ server plugins.
+endef
+
+define Package/librygel-media-engine-gst
+  $(call Package/rygel/Default)
+  TITLE+= - GStreamer media engine
+  DEPENDS:=+librygel-core +librygel-server +gstreamer +libgstpbutils +libgstapp
+endef
+
+define Package/librygel-media-engine-gst/descriptino
+$(call Package/rygel/description/Default)
+ .
+ This package contains the rygel media engine for GStreamer.
+endef
+
 define RemoveValaStamps
 	find $(PKG_BUILD_DIR) -name "*_vala.stamp" | xargs rm -f
 endef
@@ -59,7 +122,7 @@ endef
 Hooks/Configure/Pre += RemoveValaStamps
 
 define Build/Configure
-	$(call Build/Configure/Default,--without-ui,)
+	$(call Build/Configure/Default,--without-ui --disable-tracker-plugin,)
 endef
 
 define Build/Compile
@@ -102,6 +165,48 @@ define Package/rygel/install
 		$(1)/usr/share/icons/hicolor/128x128/apps/rygel.png
 endef
 
+LIB_SUFFIX := 2.0
+
+define Package/librygel-core/install
+	$(INSTALL_DIR) $(1)/usr/lib
+
+	$(INSTALL_DATA) \
+		$(PKG_INSTALL_DIR)/usr/lib/librygel-core-$(LIB_SUFFIX).so{,.1,.1.0.0} \
+		$(1)/usr/lib
+endef
+
+define Package/librygel-renderer/install
+	$(INSTALL_DIR) $(1)/usr/lib
+
+	$(INSTALL_DATA) \
+		$(PKG_INSTALL_DIR)/usr/lib/librygel-renderer-$(LIB_SUFFIX).so{,.1,.1.0.0} \
+		$(1)/usr/lib
+endef
+
+define Package/librygel-renderer-gst/install
+	$(INSTALL_DIR) $(1)/usr/lib
+
+	$(INSTALL_DATA) \
+		$(PKG_INSTALL_DIR)/usr/lib/librygel-renderer-gst-$(LIB_SUFFIX).so{,.1,.1.0.0} \
+		$(1)/usr/lib
+endef
+
+define Package/librygel-server/install
+	$(INSTALL_DIR) $(1)/usr/lib
+
+	$(INSTALL_DATA) \
+		$(PKG_INSTALL_DIR)/usr/lib/librygel-server-$(LIB_SUFFIX).so{,.1,.1.0.0} \
+		$(1)/usr/lib
+endef
+
+define Package/librygel-media-engine-gst/install
+	$(INSTALL_DIR) $(1)/usr/lib/rygel-$(LIB_SUFFIX)/engines
+
+	$(INSTALL_DATA) \
+		$(PKG_INSTALL_DIR)/usr/lib/rygel-$(LIB_SUFFIX)/engines/librygel-media-engine-gst.so \
+		$(1)/usr/lib/rygel-$(LIB_SUFFIX)/engines
+endef
+
 # 1: plugin name as used in shared library filename
 # 2: additional dependencies, if any
 define RygelBuildPlugin
@@ -113,9 +218,9 @@ define RygelBuildPlugin
   endef
 
   define Package/rygel-$(1)/install
-	$(INSTALL_DIR) $$(1)/usr/lib/rygel-1.0
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/rygel-1.0/librygel-$(1).so \
-		$$(1)/usr/lib/rygel-1.0
+	$(INSTALL_DIR) $$(1)/usr/lib/rygel-$(LIB_SUFFIX)/plugins
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/rygel-$(LIB_SUFFIX)/plugins/librygel-$(1).so \
+		$$(1)/usr/lib/rygel-$(LIB_SUFFIX)/plugins
   endef
 
   $$(eval $$(call BuildPackage,rygel-$(1)))
@@ -127,7 +232,7 @@ define Package/rygel-external/description
   This package contains the external plugin, a MediaServer plugin that exports
   media provided by applications implementing the D-Bus MediaServer interface.
 endef
-$(eval $(call RygelBuildPlugin,external))
+$(eval $(call RygelBuildPlugin,external,+librygel-server))
 
 define Package/rygel-media-export/description
   $(call Package/rygel/description/Default)
@@ -135,7 +240,7 @@ define Package/rygel-media-export/description
   This package contains the media-export plugin, a MediaServer plugin that
   recursively exports files and folders specified in the user configuration.
 endef
-$(eval $(call RygelBuildPlugin,media-export,+libsqlite3 +libgstapp +libgsttag))
+$(eval $(call RygelBuildPlugin,media-export,+libsqlite3 +libgstapp +libgsttag +librygel-server))
 
 define Package/rygel-mpris/description
   $(call Package/rygel/description/Default)
@@ -143,22 +248,24 @@ define Package/rygel-mpris/description
   This package contains the mpris plugin, a MediaServer plugin that exports
   media provided by applications implementing the D-Bus MPRIS2 interface.
 endef
-$(eval $(call RygelBuildPlugin,mpris))
+$(eval $(call RygelBuildPlugin,mpris,+librygel-server))
 
-define Package/rygel-tracker/description
-  $(call Package/rygel/description/Default)
-  .
-  This package contains the tracker plugin, a MediaServer plugin that exports
-  media known to Tracker.
-endef
-$(eval $(call RygelBuildPlugin,tracker))
+# As of 0.15, the tracker plugin has a new dependency on libtracker-sparql,
+# which is not packaged for OpenWrt.
+#define Package/rygel-tracker/description
+#  $(call Package/rygel/description/Default)
+#  .
+#  This package contains the tracker plugin, a MediaServer plugin that exports
+#  media known to Tracker.
+#endef
+#$(eval $(call RygelBuildPlugin,tracker,+librygel-server))
 
 define Package/rygel-playbin/description
   $(call Package/rygel/description/Default)
   .
   This package contains the playbin plugin, the MediaRenderer plugin.
 endef
-$(eval $(call RygelBuildPlugin,playbin))
+$(eval $(call RygelBuildPlugin,playbin,+librygel-renderer +librygel-renderer-gst))
 
 define Package/rygel-playbin-gst-suggested/description
   $(call Package/rygel/description/Default)
@@ -171,18 +278,19 @@ define Package/rygel-playbin-gst-suggested
   $(call Package/rygel/Default)
   TITLE:=Suggested GStreamer plugins for rygel-playbin
   DEPENDS:= \
+    +librygel-media-engine-gst \
     +gst-mod-alsa \
     +gst-mod-audioconvert \
     +gst-mod-audioparsers \
     +gst-mod-audioresample \
     +gst-mod-autodetect \
-    +gst-mod-decodebin2 \
     +gst-mod-flac \
     +gst-mod-icydemux \
     +gst-mod-id3demux \
+    +gst-mod-playback \
     +gst-mod-isomp4 \
     +gst-mod-ogg \
-    +gst-mod-playbin \
+    +gst-mod-playback \
     +gst-mod-souphttpsrc \
     +gst-mod-typefindfunctions \
     +gst-mod-volume \
@@ -193,3 +301,8 @@ endef
 $(eval $(call BuildPackage,rygel-playbin-gst-suggested))
  
 $(eval $(call BuildPackage,rygel))
+$(eval $(call BuildPackage,librygel-core))
+$(eval $(call BuildPackage,librygel-renderer))
+$(eval $(call BuildPackage,librygel-renderer-gst))
+$(eval $(call BuildPackage,librygel-server))
+$(eval $(call BuildPackage,librygel-media-engine-gst))
