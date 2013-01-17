@@ -1,0 +1,12 @@
+--- a/m4/rygel.m4	2012-04-12 08:47:08.000000000 -0700
++++ b/m4/rygel.m4	2012-12-17 22:59:38.000000000 -0800
+@@ -99,6 +99,9 @@
+           [dnl check for vala
+            AM_PROG_VALAC([$1])
+ 
++            RYGEL_ADD_VALAFLAGS([--vapidir $STAGING_DIR/usr/share/vala/vapi])
++            RYGEL_ADD_VALAFLAGS([--vapidir $STAGING_DIR/usr/share/vala-0.16/vapi])
++
+             AS_IF([test x$VALAC = "x"],
+                 [AC_MSG_ERROR([Cannot find the "valac" compiler in your PATH])],
+                 [

@@ -16,7 +16,7 @@ PKG_SOURCE_URL:=@GNOME/rygel/0.14/
 PKG_SHA256SUM:=c4f79fb30bc1a062a2ffdadc7a55dd91fa58240302f152fb070d8c674bdddd67
 
 PKG_FIXUP:=autoreconf
-PKG_BUILD_DEPENDS:=vala/host intltool/host vala gupnp-vala
+PKG_BUILD_DEPENDS:=vala/host intltool/host vala libgupnp-vala
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
