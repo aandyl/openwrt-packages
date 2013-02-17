@@ -24,6 +24,7 @@ PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 
+include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 
 define Package/libxml2
@@ -71,6 +72,9 @@ CONFIGURE_ARGS += \
 	--with-xptr \
 	--with-zlib \
 
+HOST_CONFIGURE_ARGS += \
+	--without-python \
+
 define Build/InstallDev
 	$(INSTALL_DIR) $(2)/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/xml2-config $(2)/bin/
@@ -105,4 +109,5 @@ define Package/libxml2/install
 endef
 
 
+$(eval $(call HostBuild))
 $(eval $(call BuildPackage,libxml2))

@@ -18,7 +18,9 @@ PKG_MD5SUM:=693f9c64d50c908bc4d6e01da3ff76d8
 PKG_FIXUP:=patch-libtool
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
+HOST_BUILD_DEPENDS:=libgpg-error/host
 
+include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 
 define Package/libgcrypt
@@ -67,4 +69,5 @@ define Package/libgcrypt/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libgcrypt.so.* $(1)/usr/lib/
 endef
 
+$(eval $(call HostBuild))
 $(eval $(call BuildPackage,libgcrypt))

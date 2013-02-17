@@ -11,8 +11,14 @@ PKG_MD5SUM:=d13fb4968acea24c26b83268a308f580
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
+HOST_BUILD_DEPENDS:=glib2/host libxml2/host libgnutls/host
+
+include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
+
+HOST_LDFLAGS+=\
+	-Wl,-rpath=$(STAGING_DIR_HOST)/lib
 
 TARGET_LDFLAGS+=\
 	-Wl,-rpath-link=$(STAGING_DIR)/usr/lib
@@ -29,6 +35,14 @@ define Build/Configure
 	$(call Build/Configure/Default, \
 		--enable-ssl \
 		--disable-glibtest \
+		--without-apache-httpd \
+		--without-gnome \
+	)
+endef
+
+define Host/Configure
+	$(call Host/Configure/Default, \
+		--disable-tls-check \
 		--without-apache-httpd \
 		--without-gnome \
 	)
@@ -61,4 +75,5 @@ define Package/libsoup/install
 		$(1)/usr/lib/
 endef
 
+$(eval $(call HostBuild))
 $(eval $(call BuildPackage,libsoup))

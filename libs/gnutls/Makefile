@@ -17,9 +17,12 @@ PKG_SOURCE_URL:=@GNU/gnutls \
 PKG_MD5SUM:=eb0a6d7d3cb9ac684d971c14f9f6d3ba
 
 PKG_FIXUP:=autoreconf
+HOST_FIXUP:=autoreconf
 PKG_INSTALL:=1
 PKG_LIBTOOL_PATHS:=. lib libextra
+HOST_BUILD_DEPENDS:=libgcrypt/host libgpg-error/host
 
+include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 
 define Package/gnutls/Default
@@ -179,6 +182,7 @@ define Package/libgnutls-openssl/install
 endef
 
 
+$(eval $(call HostBuild))
 $(eval $(call BuildPackage,certtool))
 $(eval $(call BuildPackage,gnutls-utils))
 $(eval $(call BuildPackage,libgnutls))
