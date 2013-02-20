@@ -8,15 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gst-plugins-ugly
-PKG_VERSION:=0.10.19
+PKG_VERSION:=1.0.7
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://gstreamer.freedesktop.org/src/gst-plugins-ugly/
-PKG_MD5SUM:=ba26045c8c8c91f0d48d327ccf53ac0c
+PKG_MD5SUM:=8754edf6c3be235f232fb75ad11708bb
 
 PKG_BUILD_DEPENDS:= gstreamer gst-plugins-base liboil
-PKG_CONFIG_Dba26045c8c8c91f0d48d327ccf53ac0cEPENDS:= \
+PKG_CONFIG_DEPENDS:= \
 	CONFIG_PACKAGE_gst-mod-asf \
 	CONFIG_PACKAGE_gst-mod-lame \
 	CONFIG_PACKAGE_gst-mod-mad \
@@ -46,7 +46,7 @@ $(call Package/gstreamer/Default)
   DEPENDS+= $(GST_DEPENDS)
 endef
 
-define Package/gts-plugins-ugly/description
+define Package/gst-plugins-ugly/description
 $(call Package/gstreamer/description/Default)
  .
  This meta package contains only dependencies to the other plugins from
@@ -56,7 +56,7 @@ endef
 
 GST_COND_SELECT = $(patsubst %,$(if $(CONFIG_PACKAGE_gst-mod-$(1)),--enable,--disable)-%,$(1))
 
-GST_VERSION:=0.10
+GST_VERSION:=1.0
 
 CONFIGURE_ARGS += \
 	--disable-examples \
