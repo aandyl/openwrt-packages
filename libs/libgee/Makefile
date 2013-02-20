@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libgee
-PKG_VERSION:=0.6.4
+PKG_VERSION:=0.8.4
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=@GNOME/libgee/0.6/
-PKG_MD5SUM:=a32bf498cf33d5e3417823a7b252ad22
+PKG_SOURCE_URL:=@GNOME/libgee/0.8/
+PKG_MD5SUM:=922ff20952cdef429d3dab0810761342
 
 PKG_BUILD_DEPENDS:=vala/host glib2
 
@@ -43,10 +43,10 @@ define Build/Compile
 endef
 
 define Build/InstallDev
-	$(INSTALL_DIR) $(1)/usr/{lib/pkgconfig,include/gee-1.0}
+	$(INSTALL_DIR) $(1)/usr/{lib/pkgconfig,include/gee-0.8}
 
 	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/libgee.{so*,la} \
+		$(PKG_INSTALL_DIR)/usr/lib/libgee-0.8.{so*,la} \
 		$(1)/usr/lib/
 
 	$(INSTALL_DATA) \
@@ -54,20 +54,20 @@ define Build/InstallDev
 		$(1)/usr/lib/pkgconfig/
 
 	$(INSTALL_DATA) \
-		$(PKG_INSTALL_DIR)/usr/include/gee-1.0/gee.h \
-		$(1)/usr/include/gee-1.0/
+		$(PKG_INSTALL_DIR)/usr/include/gee-0.8/gee.h \
+		$(1)/usr/include/gee-0.8/
 
 	$(INSTALL_DIR) $(1)/usr/share/vala/vapi
 
 	$(INSTALL_DATA) \
-		$(PKG_INSTALL_DIR)/usr/share/vala/vapi/gee-1.0.vapi \
+		$(PKG_INSTALL_DIR)/usr/share/vala/vapi/gee-0.8.vapi \
 		$(1)/usr/share/vala/vapi
 endef
 
 define Package/libgee/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/libgee.so* \
+		$(PKG_INSTALL_DIR)/usr/lib/libgee-0.8.so* \
 		$(1)/usr/lib/
 endef
 
