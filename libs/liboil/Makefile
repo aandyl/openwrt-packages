@@ -18,6 +18,7 @@ PKG_MD5SUM:=47dc734f82faeb2964d97771cfd2e701
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
+include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 
 define Package/liboil
@@ -62,4 +63,5 @@ define Package/liboil/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/liboil-0.3.so.* $(1)/usr/lib/
 endef
 
+$(eval $(call HostBuild))
 $(eval $(call BuildPackage,liboil))
