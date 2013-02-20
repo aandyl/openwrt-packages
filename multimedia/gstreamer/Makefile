@@ -16,10 +16,14 @@ PKG_SOURCE_URL:=http://gstreamer.freedesktop.org/src/gstreamer/
 PKG_MD5SUM:=8f6066a37c71a0d0ff5fe5f7687fea12
 
 PKG_FIXUP:=autoreconf
+HOST_FIXUP:=autoreconf
 PKG_REMOVE_FILES:=autogen.sh aclocal.m4
 
 PKG_INSTALL:=1
 
+HOST_BUILD_DEPENDS:=glib2/host libxml2/host
+
+include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
 
@@ -185,6 +189,11 @@ $(eval $(call GstBuildLibrary,check,check unit testing))
 $(eval $(call GstBuildLibrary,controller,dynamic parameter control))
 $(eval $(call GstBuildLibrary,net,network classes))
 
+# Makefile does lots of pkg-config expansions, so need to provide the
+# exports even when installing.
+$(eval $(call Host/Exports,$(HOST_STAMP_INSTALLED)))
+
+$(eval $(call HostBuild))
 $(eval $(call BuildPackage,gstreamer))
 $(eval $(call BuildPackage,gstreamer-utils))
 $(eval $(call BuildPackage,libgstreamer))
