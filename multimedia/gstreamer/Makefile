@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2008-2012 OpenWrt.org
+# Copyright (C) 2008-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gstreamer
-PKG_VERSION:=0.10.36
+PKG_VERSION:=1.0.7
 PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://gstreamer.freedesktop.org/src/gstreamer/
-PKG_MD5SUM:=a0cf7d6877f694a1a2ad2b4d1ecb890b
+PKG_MD5SUM:=8f6066a37c71a0d0ff5fe5f7687fea12
 
 PKG_FIXUP:=autoreconf
 PKG_REMOVE_FILES:=autogen.sh aclocal.m4
@@ -41,7 +41,6 @@ $(call Package/gstreamer/Default)
   DEPENDS+= +libgstreamer \
 	+libgstcheck \
 	+libgstcontroller \
-	+libgstdataprotocol \
 	+libgstnet
 endef
 
@@ -79,7 +78,7 @@ $(call Package/gstreamer/description/Default)
 endef
   
 
-GST_VERSION:=0.10
+GST_VERSION:=1.0
 
 CONFIGURE_ARGS += \
 	--disable-examples \
@@ -101,7 +100,7 @@ define Build/InstallDev
 	)
 	$(INSTALL_DIR) $(1)/usr/lib
 	( cd $(PKG_INSTALL_DIR); $(CP) \
-		./usr/lib/libgst*-$(GST_VERSION).{a,la,so*} \
+		./usr/lib/libgst*-$(GST_VERSION).{la,so*} \
 		$(1)/usr/lib/ \
 	)
 	$(INSTALL_DIR) $(1)/usr/lib/gstreamer-$(GST_VERSION)
@@ -184,7 +183,6 @@ endef
 
 $(eval $(call GstBuildLibrary,check,check unit testing))
 $(eval $(call GstBuildLibrary,controller,dynamic parameter control))
-$(eval $(call GstBuildLibrary,dataprotocol,data protocol))
 $(eval $(call GstBuildLibrary,net,network classes))
 
 $(eval $(call BuildPackage,gstreamer))

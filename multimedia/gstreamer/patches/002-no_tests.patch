@@ -1,34 +1,15 @@
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -7,14 +7,14 @@ aclocaldir = $(datadir)/aclocal
- aclocal_DATA = gst-element-check-@GST_MAJORMINOR@.m4
+@@ -7,7 +7,7 @@ aclocaldir = $(datadir)/aclocal
+ aclocal_DATA = gst-element-check-@GST_API_VERSION@.m4
  
  SUBDIRS = pkgconfig \
--	gst libs plugins tools tests \
-+	gst libs plugins tools \
+-	gst libs plugins tests \
++	gst libs plugins \
  	po \
  	m4 \
  	common
- 
- # These are all the possible subdirs
- DIST_SUBDIRS = pkgconfig \
--	gst libs plugins tools tests \
-+	gst libs plugins tools \
- 	po \
- 	m4 \
- 	common
---- a/Makefile.in
-+++ b/Makefile.in
-@@ -444,7 +444,7 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-gtk
- aclocaldir = $(datadir)/aclocal
- aclocal_DATA = gst-element-check-@GST_MAJORMINOR@.m4
- SUBDIRS = pkgconfig \
--	gst libs plugins tools tests \
-+	gst libs plugins tools \
- 	po \
- 	m4 \
- 	common
-@@ -452,7 +452,7 @@ SUBDIRS = pkgconfig \
+@@ -18,7 +18,7 @@ endif
  
  # These are all the possible subdirs
  DIST_SUBDIRS = pkgconfig \
