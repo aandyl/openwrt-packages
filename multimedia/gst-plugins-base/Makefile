@@ -31,9 +31,13 @@ PKG_CONFIG_DEPENDS:= \
 	CONFIG_PACKAGE_gst-mod-volume \
 	CONFIG_PACKAGE_gst-mod-vorbis \
 
+HOST_BUILD_DEPENDS:=gstreamer/host liboil/host
+
 PKG_FIXUP:=autoreconf
+HOST_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
+include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
 
@@ -236,4 +240,5 @@ $(eval $(call GstBuildPlugin,videotestsrc,video test,video,,))
 $(eval $(call GstBuildPlugin,volume,volume,audio tag,,))
 $(eval $(call GstBuildPlugin,vorbis,Vorbis,audio tag,ogg,+libvorbis))
 
+$(eval $(call HostBuild))
 $(eval $(call BuildPackage,gst-plugins-base))
