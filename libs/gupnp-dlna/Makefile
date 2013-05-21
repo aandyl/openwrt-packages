@@ -8,18 +8,30 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gupnp-dlna
-PKG_VERSION:=0.6.6
+PKG_VERSION:=0.10.1
 PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=http://ftp.gnome.org/pub/GNOME/sources/gupnp-dlna/0.6/
-PKG_MD5SUM:=4e3151125de991f474f728c1c5343ab1
+LIB_SUFFIX:=2.0
 
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=@GNOME/gupnp-dlna/0.10/
+PKG_MD5SUM:=3ce99b8e62f870bbd56e6116e7f82596
+
+PKG_FIXUP:=autoreconf
+HOST_BUILD_DEPENDS:=libgupnp/host gstreamer/host libgstpbutils/host vala/host gobject-introspection/host
+PKG_BUILD_DEPENDS:=libgupnp-dlna/host
+
+include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
 
 TARGET_LDFLAGS+=\
 	-Wl,-rpath-link=$(STAGING_DIR)/usr/lib
+
+define Host/Exports
+  $(call Host/Exports/Default, $(1))
+  $(1) : export XDG_DATA_DIRS=$(STAGING_DIR_HOST)/share
+endef
 
 define Package/libgupnp-dlna
   SECTION:=libs
@@ -41,10 +53,14 @@ define Build/Compile
 endef
 
 define Build/InstallDev
-	$(INSTALL_DIR) $(1)/usr/{lib/pkgconfig,include/gupnp-dlna-1.0/libgupnp-dlna}
+	$(INSTALL_DIR) $(1)/usr/{lib/pkgconfig,include/gupnp-dlna-$(LIB_SUFFIX)/libgupnp-dlna}
 
 	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/libgupnp-dlna-1.0.{so*,la,a} \
+		$(PKG_INSTALL_DIR)/usr/lib/libgupnp-dlna-$(LIB_SUFFIX).{so*,la,a} \
+		$(1)/usr/lib/
+
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/lib/libgupnp-dlna-gst-$(LIB_SUFFIX).{so*,la,a} \
 		$(1)/usr/lib/
 
 	$(INSTALL_DATA) \
@@ -52,15 +68,26 @@ define Build/InstallDev
 		$(1)/usr/lib/pkgconfig/
 
 	$(INSTALL_DATA) \
-		$(PKG_INSTALL_DIR)/usr/include/gupnp-dlna-1.0/libgupnp-dlna/*.h \
-		$(1)/usr/include/gupnp-dlna-1.0/libgupnp-dlna/
+		$(PKG_INSTALL_DIR)/usr/include/gupnp-dlna-$(LIB_SUFFIX)/libgupnp-dlna/*.h \
+		$(1)/usr/include/gupnp-dlna-$(LIB_SUFFIX)/libgupnp-dlna/
+
+	$(INSTALL_DIR) $(1)/usr/share/vala/vapi
+
+	$(INSTALL_DATA) \
+		$(HOST_BUILD_DIR)/vala/gupnp-dlna-$(LIB_SUFFIX).{vapi,deps} \
+		$(1)/usr/share/vala/vapi
+
+	$(INSTALL_DATA) \
+		$(HOST_BUILD_DIR)/vala/gupnp-dlna-gst-$(LIB_SUFFIX).{vapi,deps} \
+		$(1)/usr/share/vala/vapi
 endef
 
 define Package/libgupnp-dlna/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/libgupnp-dlna-1.0.so* \
+		$(PKG_INSTALL_DIR)/usr/lib/libgupnp-dlna-$(LIB_SUFFIX).so* \
 		$(1)/usr/lib/
 endef
 
+$(eval $(call HostBuild))
 $(eval $(call BuildPackage,libgupnp-dlna))
