@@ -15,11 +15,21 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GNOME/gupnp-av/0.12/
 PKG_MD5SUM:=2d15a94d743720febb400b2cacde1cdc
 
+PKG_FIXUP:=autoreconf
+HOST_BUILD_DEPENDS:=libgupnp/host vala/host gobject-introspection/host
+PKG_BUILD_DEPENDS:=libgupnp-av/host
+
+include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
 
 TARGET_LDFLAGS+=\
         -Wl,-rpath-link=$(STAGING_DIR)/usr/lib
+
+define Host/Exports
+  $(call Host/Exports/Default, $(1))
+  $(1) : export XDG_DATA_DIRS=$(STAGING_DIR_HOST)/share
+endef
 
 define Package/libgupnp-av
   SECTION:=libs
@@ -54,6 +64,12 @@ define Build/InstallDev
 	$(INSTALL_DATA) \
 		$(PKG_INSTALL_DIR)/usr/include/gupnp-av-1.0/libgupnp-av/*.h \
 		$(1)/usr/include/gupnp-av-1.0/libgupnp-av/
+
+	$(INSTALL_DIR) $(1)/usr/share/vala/vapi
+
+	$(INSTALL_DATA) \
+		$(HOST_BUILD_DIR)/vala/gupnp-av-1.0.{vapi,deps} \
+		$(1)/usr/share/vala/vapi
 endef
 
 define Package/libgupnp-av/install
@@ -63,4 +79,5 @@ define Package/libgupnp-av/install
 		$(1)/usr/lib/
 endef
 
+$(eval $(call HostBuild))
 $(eval $(call BuildPackage,libgupnp-av))
