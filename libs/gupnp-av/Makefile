@@ -15,9 +15,20 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GNOME/gupnp-av/0.12/
 PKG_MD5SUM:=2d15a94d743720febb400b2cacde1cdc
 
+# When set, this package (and all dependencies) will be built on the host, in
+# order to regenerate the Vala API definition file (.vapi) using
+# gobject-introspection and vapigen.
+#
+# When clear, pregenerated vapi provided by the package maintainer will be
+# used.
+BUILD_VAPI:=1
+
 PKG_FIXUP:=autoreconf
 HOST_BUILD_DEPENDS:=libgupnp/host vala/host gobject-introspection/host
-PKG_BUILD_DEPENDS:=libgupnp-av/host
+
+ifdef BUILD_VAPI
+  PKG_BUILD_DEPENDS+=libgupnp-av/host
+endif
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
@@ -50,6 +61,12 @@ define Build/Compile
 		all install
 endef
 
+ifdef BUILD_VAPI
+  VAPI_SOURCE:=$(HOST_BUILD_DIR)/vala
+else
+  VAPI_SOURCE:=./files
+endif
+
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/{lib/pkgconfig,include/gupnp-av-1.0/libgupnp-av}
 
@@ -68,7 +85,7 @@ define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/share/vala/vapi
 
 	$(INSTALL_DATA) \
-		$(HOST_BUILD_DIR)/vala/gupnp-av-1.0.{vapi,deps} \
+		$(VAPI_SOURCE)/gupnp-av-1.0.{vapi,deps} \
 		$(1)/usr/share/vala/vapi
 endef
 
