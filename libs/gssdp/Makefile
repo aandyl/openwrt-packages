@@ -15,9 +15,21 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GNOME/gssdp/0.14/
 PKG_MD5SUM:=46bbfa2c8f5e035afde70899134e9e86
 
+# When set, this package (and all dependencies) will be built on the host, in
+# order to regenerate the Vala API definition file (.vapi) using
+# gobject-introspection and vapigen.
+#
+# When clear, pregenerated vapi provided by the package maintainer will be
+# used.
+BUILD_VAPI:=1
+
 PKG_FIXUP:=autoreconf
 HOST_BUILD_DEPENDS:=libsoup/host glib2/host vala/host gobject-introspection/host
-PKG_BUILD_DEPENDS:=$(ICONV_DEPENDS) libgssdp/host
+PKG_BUILD_DEPENDS:=$(ICONV_DEPENDS)
+
+ifdef BUILD_VAPI
+  PKG_BUILD_DEPENDS+=libgssdp/host
+endif
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
@@ -49,6 +61,12 @@ define Build/Compile
 		all install
 endef
 
+ifdef BUILD_VAPI
+  VAPI_SOURCE:=$(HOST_BUILD_DIR)/vala
+else
+  VAPI_SOURCE:=./files
+endif
+
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/{lib/pkgconfig,include/gssdp-1.0/libgssdp}
 
@@ -67,7 +85,7 @@ define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/share/vala/vapi
 
 	$(INSTALL_DATA) \
-		$(HOST_BUILD_DIR)/vala/gssdp-1.0.{vapi,deps} \
+		$(VAPI_SOURCE)/gssdp-1.0.{vapi,deps} \
 		$(1)/usr/share/vala/vapi
 endef
 
