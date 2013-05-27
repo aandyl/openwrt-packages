@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2008-2012 OpenWrt.org
+# Copyright (C) 2008-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gst-plugins-base
-PKG_VERSION:=0.10.36
+PKG_VERSION:=1.0.7
 PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://gstreamer.freedesktop.org/src/gst-plugins-base/
-PKG_MD5SUM:=776c73883e567f67b9c4a2847d8d041a
+PKG_MD5SUM:=b5b43cfbf82b413ce2e07a190d87e68f
 
 PKG_BUILD_DEPENDS:= gstreamer liboil
 PKG_CONFIG_DEPENDS:= \
@@ -58,7 +58,7 @@ $(call Package/gstreamer/Default)
   DEPENDS+= $(GST_DEPENDS)
 endef
 
-define Package/gts-plugins-base/description
+define Package/gst-plugins-base/description
 $(call Package/gstreamer/description/Default)
  .
  This meta package contains only dependencies to the other libraries and
@@ -68,7 +68,7 @@ endef
 
 GST_COND_SELECT = $(patsubst %,$(if $(CONFIG_PACKAGE_gst-mod-$(1)),--enable,--disable)-%,$(1))
 
-GST_VERSION:=0.10
+GST_VERSION:=1.0
 
 CONFIGURE_ARGS += \
 	--disable-examples \
@@ -121,7 +121,7 @@ define Build/InstallDev
 	)
 	$(INSTALL_DIR) $(1)/usr/lib
 	( cd $(PKG_INSTALL_DIR); $(CP) \
-		./usr/lib/libgst*-$(GST_VERSION).{a,la,so*} \
+		./usr/lib/libgst*-$(GST_VERSION).{la,so*} \
 		$(1)/usr/lib/ \
 	)
 	$(INSTALL_DIR) $(1)/usr/lib/gstreamer-$(GST_VERSION)
@@ -174,13 +174,10 @@ define GstBuildLibrary
 endef
 
 $(eval $(call GstBuildLibrary,app,app,,))
-$(eval $(call GstBuildLibrary,audio,audio,interfaces pbutils,))
-$(eval $(call GstBuildLibrary,cdda,CDDA,tag,))
+$(eval $(call GstBuildLibrary,audio,audio,tag,))
 $(eval $(call GstBuildLibrary,fft,FFT,,))
-$(eval $(call GstBuildLibrary,interfaces,interfaces,))
-$(eval $(call GstBuildLibrary,netbuffer,network buffer,,))
-$(eval $(call GstBuildLibrary,pbutils,utils,,))
-$(eval $(call GstBuildLibrary,riff,RIFF media,audio tag,,))
+$(eval $(call GstBuildLibrary,pbutils,utils,audio tag video,))
+$(eval $(call GstBuildLibrary,riff,RIFF media,audio tag,))
 $(eval $(call GstBuildLibrary,rtp,RTP,,))
 $(eval $(call GstBuildLibrary,rtsp,RTSP,,))
 $(eval $(call GstBuildLibrary,sdp,SDP,,))
@@ -220,22 +217,23 @@ define GstBuildPlugin
   $$(eval $$(call BuildPackage,gst-mod-$(1)))
 endef
 
-$(eval $(call GstBuildPlugin,alsa,ALSA,audio,,+alsa-lib))
+$(eval $(call GstBuildPlugin,adder,adder,audio tag,,))
+$(eval $(call GstBuildPlugin,alsa,ALSA,audio tag,,+alsa-lib))
 $(eval $(call GstBuildPlugin,app,app,app,,))
-$(eval $(call GstBuildPlugin,audioconvert,audio format conversion,audio,,))
-$(eval $(call GstBuildPlugin,audiorate,audio rate adjusting,,,))
-$(eval $(call GstBuildPlugin,audioresample,audio resampling,,,))
-$(eval $(call GstBuildPlugin,audiotestsrc,audio test,controller,,))
-$(eval $(call GstBuildPlugin,decodebin,media decoder,pbutils,,))
-$(eval $(call GstBuildPlugin,decodebin2,media decoder (v2),pbutils,,))
+$(eval $(call GstBuildPlugin,audioconvert,audio format conversion,audio tag,,))
+$(eval $(call GstBuildPlugin,audiorate,audio rate adjusting,audio tag,,))
+$(eval $(call GstBuildPlugin,audioresample,audio resampling,audio tag,,))
+$(eval $(call GstBuildPlugin,audiotestsrc,audio test,audio tag,,))
+$(eval $(call GstBuildPlugin,encodebin,encodebin,audio pbutils tag video,,))
 $(eval $(call GstBuildPlugin,gio,GIO,,,))
-$(eval $(call GstBuildPlugin,ogg,Ogg,riff tag,,+libogg))
-$(eval $(call GstBuildPlugin,playbin,playback,video interfaces pbutils,,))
-$(eval $(call GstBuildPlugin,tcp,TCP,dataprotocol,,))
+$(eval $(call GstBuildPlugin,ogg,Ogg,audio riff tag,,+libogg))
+$(eval $(call GstBuildPlugin,playback,playback,audio pbutils tag video,,))
+$(eval $(call GstBuildPlugin,tcp,TCP,,,))
 $(eval $(call GstBuildPlugin,theora,Theora,video tag,ogg,+libtheora))
-$(eval $(call GstBuildPlugin,typefindfunctions,'typefind' functions,pbutils,,))
-$(eval $(call GstBuildPlugin,videotestsrc,video test,,,+liboil))
-$(eval $(call GstBuildPlugin,volume,volume,audio controller,,+liboil))
+$(eval $(call GstBuildPlugin,typefindfunctions,'typefind' functions,audio pbutils tag video,,))
+$(eval $(call GstBuildPlugin,videoconvert,video format conversion,video,,))
+$(eval $(call GstBuildPlugin,videotestsrc,video test,video,,))
+$(eval $(call GstBuildPlugin,volume,volume,audio tag,,))
 $(eval $(call GstBuildPlugin,vorbis,Vorbis,audio tag,ogg,+libvorbis))
 
 $(eval $(call BuildPackage,gst-plugins-base))
