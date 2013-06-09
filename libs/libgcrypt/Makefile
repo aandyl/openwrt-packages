@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libgcrypt
 PKG_VERSION:=1.5.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=ftp://ftp.gnupg.org/gcrypt/libgcrypt
@@ -19,6 +19,9 @@ PKG_FIXUP:=patch-libtool
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 
+PKG_CONFIG_DEPENDS := \
+	LIBGCRYPT_CIPHER_BLOWFISH
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/libgcrypt
@@ -27,6 +30,10 @@ define Package/libgcrypt
   DEPENDS:=+libgpg-error
   TITLE:=GNU crypto library
   URL:=http://directory.fsf.org/security/libgcrypt.html
+endef
+
+define Package/libgcrypt/config
+  source "$(SOURCE)/Config.in"
 endef
 
 define Package/libgcrypt/description
@@ -40,13 +47,19 @@ define Package/libgcrypt/description
  RC2, SEED, Camellia, CRC, MD4, TIGER-192, Whirlpool, ElGamal, ECC).
 endef
 
+CIPHERS := arcfour des aes cast5
+
+ifdef CONFIG_LIBGCRYPT_CIPHER_BLOWFISH
+  CIPHERS += blowfish
+endif
+
 CONFIGURE_ARGS += \
 	--enable-shared \
 	--enable-static \
 	--disable-asm \
 	--with-gpg-error-prefix="$(STAGING_DIR)/usr" \
 	--enable-digests="md5 rmd160 sha1 sha256 sha512" \
-	--enable-ciphers="arcfour des aes cast5" \
+	--enable-ciphers="$(CIPHERS)" \
 	--enable-pubkey-ciphers="rsa dsa"
 
 TARGET_CFLAGS += $(FPIC)

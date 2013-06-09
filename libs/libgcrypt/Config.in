@@ -1,0 +1,8 @@
+config LIBGCRYPT_CIPHER_BLOWFISH
+	depends on PACKAGE_libgcrypt
+	bool "Build with support for Blowfish cipher"
+	default n
+	help
+		The Blowfish cipher is disabled by default to reduce installed
+		size.  You can safely leave it disabled unless you have a
+		specific need for it.
