@@ -1,0 +1,16 @@
+--- a/configure.ac
++++ b/configure.ac
+@@ -38,7 +38,6 @@ PKG_CHECK_MODULES([ao], [ao],,
+ PKG_CHECK_MODULES([mad], [mad],,
+ 	[AC_MSG_WARN([No pkg-config for libmad])])
+-PKG_CHECK_MODULES([json], [json],,
+-	[AC_MSG_WARN([No pkg-config for libjson (aka libjson0, json-c)])])
++PKG_CHECK_MODULES([json], [json-c])
+ 
+ # Network communication stuff:
+ AC_CHECK_LIB([gcrypt], [gcry_cipher_open],,
+@@ -49,4 +48,0 @@
+-AC_CHECK_LIB([json], [json_object_new_string],,
+-	[AC_MSG_ERROR([Cannot find required library: libjson (aka libjson0, json-c)])])
+-
+-

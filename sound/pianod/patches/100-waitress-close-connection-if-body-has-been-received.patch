@@ -1,0 +1,64 @@
+From ea4324bbb6d3388c39f80906c85501feee3cb541 Mon Sep 17 00:00:00 2001
+From: Lars-Dominik Braun <lars@6xq.net>
+Date: Wed, 8 May 2013 18:55:16 +0200
+Subject: [PATCH] waitress: Close connection if body has been received
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Now libwaitress won’t wait until the server closes the connection if the
+request body has been received. Multiple requests per connection are not
+supported anyway. Fixes #321. Thanks to Michael Stowe.
+---
+ src/libwaitress/waitress.c | 8 ++++++++
+ src/libwaitress/waitress.h | 1 +
+ 2 files changed, 9 insertions(+)
+
+diff --git a/src/libwaitress/waitress.c b/src/libwaitress/waitress.c
+index 3d01198..771c54f 100644
+--- a/src/libwaitress/waitress.c
++++ b/src/libwaitress/waitress.c
+@@ -703,6 +703,7 @@ static void WaitressHandleHeader (WaitressHandle_t *waith, const char * const ke
+ 
+ 	if (strcaseeq (key, "Content-Length")) {
+ 		waith->request.contentLength = atol (value);
++		waith->request.contentLengthKnown = true;
+ 	} else if (strcaseeq (key, "Transfer-Encoding")) {
+ 		if (strcaseeq (value, "chunked")) {
+ 			waith->request.dataHandler = WaitressHandleChunked;
+@@ -1064,6 +1065,12 @@ static WaitressReturn_t WaitressReceiveResponse (WaitressHandle_t *waith) {
+ 				/* go on */
+ 				break;
+ 		}
++		if (waith->request.contentLengthKnown &&
++				waith->request.contentReceived >= waith->request.contentLength) {
++			/* don’t call read() again if we know the body’s size and have all
++			 * of it already */
++			break;
++		}
+ 		READ_RET (buf, WAITRESS_BUFFER_SIZE-1, &recvSize);
+ 	} while (recvSize > 0);
+ 
+@@ -1083,6 +1090,7 @@ WaitressReturn_t WaitressFetchCall (WaitressHandle_t *waith) {
+ 	waith->request.dataHandler = WaitressHandleIdentity;
+ 	waith->request.read = WaitressOrdinaryRead;
+ 	waith->request.write = WaitressOrdinaryWrite;
++	waith->request.contentLengthKnown = false;
+ 
+ 	if (waith->url.tls) {
+ 		gnutls_init (&waith->request.tlsSession, GNUTLS_CLIENT);
+diff --git a/src/libwaitress/waitress.h b/src/libwaitress/waitress.h
+index 9075047..bd80134 100644
+--- a/src/libwaitress/waitress.h
++++ b/src/libwaitress/waitress.h
+@@ -110,6 +110,7 @@ of this software and associated documentation files (the "Software"), to deal
+ 		WaitressReturn_t readWriteRet;
+ 
+ 		size_t contentLength, contentReceived, chunkSize;
++		bool contentLengthKnown;
+ 		enum {CHUNKSIZE = 0, DATA = 1} chunkedState;
+ 
+ 		char *buf;
+-- 
+1.8.1.6
+
