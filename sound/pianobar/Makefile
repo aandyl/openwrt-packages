@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2012 OpenWrt.org
+# Copyright (C) 2012-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,20 +8,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pianobar
-PKG_VERSION:=2012.01.10
+PKG_VERSION:=2013.05.19
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_SOURCE_URL:=http://6xq.net/static/projects/pianobar
-PKG_MD5SUM:=448c57d65c71158674e8b30a8cfa217e
+PKG_SOURCE_URL:=http://6xq.net/projects/pianobar
+PKG_MD5SUM:=4c787b981e2b6b7c17d17c8981b0d901
 
-PKG_BUILD_DEPENDS:=libao libfaad2 libmad
+PKG_BUILD_DEPENDS:=libao libfaad2 libmad libjson
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/pianobar/Default
-  DEPENDS:=+libgnutls
+  DEPENDS:=+libgnutls +@LIBGCRYPT_CIPHER_BLOWFISH
   TITLE:=Pandora radio
   URL:=http://6xq.net/projects/pianobar/
 endef
@@ -47,6 +47,7 @@ define Package/libpiano
   $(call Package/pianobar/Default)
   SECTION:=libs
   CATEGORY:=Libraries
+  DEPENDS+= +libjson
   TITLE+= library
 endef
 

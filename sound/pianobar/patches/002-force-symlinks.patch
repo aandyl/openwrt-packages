@@ -1,17 +1,17 @@
 --- a/Makefile
 +++ b/Makefile
-@@ -108,8 +108,8 @@ libpiano.so.0: ${LIBPIANO_RELOBJ} ${LIBP
- 	${CC} -shared -Wl,-soname,libpiano.so.0 ${CFLAGS} ${LDFLAGS} ${LIBGNUTLS_LDFLAGS} \
+@@ -113,8 +113,8 @@ libpiano.so.0: ${LIBPIANO_RELOBJ} ${LIBP
  			-o libpiano.so.0.0.0 ${LIBPIANO_RELOBJ} \
- 			${LIBWAITRESS_RELOBJ} ${LIBEZXML_RELOBJ}
+ 			${LIBWAITRESS_RELOBJ} ${LIBGNUTLS_LDFLAGS} ${LIBGCRYPT_LDFLAGS} \
+ 			${LIBJSONC_LDFLAGS}
 -	ln -s libpiano.so.0.0.0 libpiano.so.0
 -	ln -s libpiano.so.0 libpiano.so
 +	ln -sf libpiano.so.0.0.0 libpiano.so.0
 +	ln -sf libpiano.so.0 libpiano.so
- 	${AR} rcs libpiano.a ${LIBPIANO_OBJ} ${LIBWAITRESS_OBJ} ${LIBEZXML_OBJ}
+ 	${AR} rcs libpiano.a ${LIBPIANO_OBJ} ${LIBWAITRESS_OBJ}
  
- %.o: %.c
-@@ -177,8 +177,8 @@ endif
+ 
+@@ -199,8 +199,8 @@
  install-libpiano:
  	install -d ${DESTDIR}/${LIBDIR}/
  	install -m644 libpiano.so.0.0.0 ${DESTDIR}/${LIBDIR}/

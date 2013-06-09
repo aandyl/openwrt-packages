@@ -1,0 +1,17 @@
+--- a/Makefile
++++ b/Makefile
+@@ -78,8 +78,12 @@
+ 	LIBMAD_LDFLAGS:=
+ else
+ 	LIBMAD_CFLAGS:=-DENABLE_MAD
+-	LIBMAD_CFLAGS+=$(shell pkg-config --cflags mad)
+-	LIBMAD_LDFLAGS:=$(shell pkg-config --libs mad)
++	ifeq ($(shell pkg-config --exists --print-errors --errors-to-stdout mad),)
++		LIBMAD_CFLAGS+=$(shell pkg-config --cflags mad)
++		LIBMAD_LDFLAGS:=$(shell pkg-config --libs mad)
++	else
++		LIBMAD_LDFLAGS:=-lmad
++	endif
+ endif
+ 
+ LIBGNUTLS_CFLAGS:=$(shell pkg-config --cflags gnutls)
