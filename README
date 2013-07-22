@@ -1,0 +1,8 @@
+See http://wiki.openwrt.org/doc/howto/rygel
+
+As of 22 Jul 2013, the following three patches to the main openwrt tree are
+needed to build Rygel:
+
+http://patchwork.openwrt.org/patch/3695/
+http://patchwork.openwrt.org/patch/3696/
+http://patchwork.openwrt.org/patch/3839/
