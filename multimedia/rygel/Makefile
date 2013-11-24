@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rygel
-PKG_VERSION:=0.18.2
+PKG_VERSION:=0.20.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=@GNOME/rygel/0.18/
-PKG_MD5SUM:=fd7bdb0562b82b1ed4ceb40e5fa89f6d
+PKG_SOURCE_URL:=@GNOME/rygel/0.20/
+PKG_MD5SUM:=a719121013449c35dbad0f9a22effa0c
 
 PKG_FIXUP:=autoreconf
 PKG_BUILD_DEPENDS:=vala/host intltool/host vala
