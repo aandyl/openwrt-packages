@@ -1,6 +1,6 @@
 --- a/configure.ac
 +++ b/configure.ac
-@@ -923,7 +923,6 @@ docs/design/Makefile
+@@ -915,7 +915,6 @@ docs/design/Makefile
  docs/libs/Makefile
  docs/plugins/Makefile
  docs/version.entities
@@ -28,7 +28,7 @@
  
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -492,7 +492,6 @@ SUBDIRS = \
+@@ -537,7 +537,6 @@ SUBDIRS = \
  	gst-libs 		\
  	gst sys $(SUBDIRS_EXT) 	\
  	tools 			\
@@ -36,7 +36,7 @@
  	common 			\
  	m4
  
-@@ -501,7 +500,6 @@ DIST_SUBDIRS = \
+@@ -546,7 +545,6 @@ DIST_SUBDIRS = \
  	gst-libs		\
  	gst sys ext		\
  	tools 			\

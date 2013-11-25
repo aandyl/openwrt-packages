@@ -18,7 +18,7 @@
  	m4
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -492,7 +492,6 @@ SUBDIRS = \
+@@ -537,7 +537,6 @@ SUBDIRS = \
  	gst-libs 		\
  	gst sys $(SUBDIRS_EXT) 	\
  	tools 			\
@@ -26,7 +26,7 @@
  	po 			\
  	common 			\
  	m4
-@@ -502,7 +501,6 @@ DIST_SUBDIRS = \
+@@ -547,7 +546,6 @@ DIST_SUBDIRS = \
  	gst-libs		\
  	gst sys ext		\
  	tools 			\

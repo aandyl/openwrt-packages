@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gst-plugins-base
-PKG_VERSION:=1.0.7
+PKG_VERSION:=1.2.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://gstreamer.freedesktop.org/src/gst-plugins-base/
-PKG_MD5SUM:=b5b43cfbf82b413ce2e07a190d87e68f
+PKG_MD5SUM:=8ee6863cbb917bb4bd235698b87192a4
 
 PKG_BUILD_DEPENDS:= gstreamer liboil
 PKG_CONFIG_DEPENDS:= \
@@ -177,6 +177,7 @@ define GstBuildLibrary
   $$(eval $$(call BuildPackage,libgst$(1)))
 endef
 
+$(eval $(call GstBuildLibrary,allocators,allocators,,))
 $(eval $(call GstBuildLibrary,app,app,,))
 $(eval $(call GstBuildLibrary,audio,audio,tag,))
 $(eval $(call GstBuildLibrary,fft,FFT,,))
@@ -230,7 +231,7 @@ $(eval $(call GstBuildPlugin,audioresample,audio resampling,audio tag,,))
 $(eval $(call GstBuildPlugin,audiotestsrc,audio test,audio tag,,))
 $(eval $(call GstBuildPlugin,encodebin,encodebin,audio pbutils tag video,,))
 $(eval $(call GstBuildPlugin,gio,GIO,,,))
-$(eval $(call GstBuildPlugin,ogg,Ogg,audio riff tag,,+libogg))
+$(eval $(call GstBuildPlugin,ogg,Ogg,audio pbutils riff tag video,,+libogg))
 $(eval $(call GstBuildPlugin,playback,playback,audio pbutils tag video,,))
 $(eval $(call GstBuildPlugin,tcp,TCP,,,))
 $(eval $(call GstBuildPlugin,theora,Theora,video tag,ogg,+libtheora))
