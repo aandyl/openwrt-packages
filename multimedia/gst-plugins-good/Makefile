@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gst-plugins-good
-PKG_VERSION:=1.0.7
+PKG_VERSION:=1.2.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://gstreamer.freedesktop.org/src/gst-plugins-good/
-PKG_MD5SUM:=e4b1c825475a9b478fe29e8e9f34516f
+PKG_MD5SUM:=082156e9fb737ee6132b6b663f2901a1
 
 PKG_BUILD_DEPENDS:= gstreamer gst-plugins-base liboil
 
@@ -149,11 +149,12 @@ define GstBuildPlugin
 endef
 
 $(eval $(call GstBuildPlugin,audiofx,audio effects,audio fft,,))
-$(eval $(call GstBuildPlugin,audioparsers,audio parsers,audio tag,,))
+$(eval $(call GstBuildPlugin,audioparsers,audio parsers,audio pbutils tag,,))
 $(eval $(call GstBuildPlugin,autodetect,format auto-detection,,,))
 $(eval $(call GstBuildPlugin,cutter,audio cutter,audio,,))
 $(eval $(call GstBuildPlugin,debug,debugging,,,))
 $(eval $(call GstBuildPlugin,deinterlace,deinterlace,video,,))
+$(eval $(call GstBuildPlugin,dtmf,dtmf support,rtp,,))
 $(eval $(call GstBuildPlugin,equalizer,audio equalizer,audio,,))
 $(eval $(call GstBuildPlugin,flac,FLAC codec,audio tag,,+libflac))
 $(eval $(call GstBuildPlugin,icydemux,icy demuxer,tag,,))
@@ -169,7 +170,7 @@ $(eval $(call GstBuildPlugin,oss4audio,OSS 4 audio support,audio,,))
 $(eval $(call GstBuildPlugin,replaygain,volume normalization,audio pbutils,,))
 $(eval $(call GstBuildPlugin,rtpmanager,RTP manager,net rtp,,))
 $(eval $(call GstBuildPlugin,rtp,RTP,audio pbutils rtp tag video,,))
-$(eval $(call GstBuildPlugin,rtsp,RTSP,rtp rtsp sdp,,))
+$(eval $(call GstBuildPlugin,rtsp,RTSP,net rtp rtsp sdp,,))
 $(eval $(call GstBuildPlugin,souphttpsrc,soup input,tag,,+libsoup))
 $(eval $(call GstBuildPlugin,spectrum,spectrum data output,audio fft,,))
 $(eval $(call GstBuildPlugin,udp,UDP,net,,))

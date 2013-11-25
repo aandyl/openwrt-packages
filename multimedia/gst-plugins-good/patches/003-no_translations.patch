@@ -1,6 +1,6 @@
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1157,7 +1157,6 @@ sys/sunaudio/Makefile
+@@ -1195,7 +1195,6 @@ sys/sunaudio/Makefile
  sys/v4l2/Makefile
  sys/waveform/Makefile
  sys/ximage/Makefile
@@ -20,7 +20,7 @@
  	pkgconfig
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -522,7 +522,6 @@ top_srcdir = @top_srcdir@
+@@ -570,7 +570,6 @@ top_srcdir = @top_srcdir@
  DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
  ALWAYS_SUBDIRS = \
  	gst sys ext 		\

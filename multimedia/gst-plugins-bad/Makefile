@@ -213,7 +213,6 @@ $(eval $(call GstBuildPlugin,camerabin2,camerabin support,app basecamerabinsrc p
 $(eval $(call GstBuildPlugin,dataurisrc,dataurisrc support,,,))
 #NONPORTED: $(eval $(call GstBuildPlugin,dccp,dccp support,,,))
 $(eval $(call GstBuildPlugin,debugutilsbad,debugutils support,video,,))
-$(eval $(call GstBuildPlugin,dtmf,dtmf support,rtp,,))
 $(eval $(call GstBuildPlugin,dvdspu,dvdspu support,video,,))
 $(eval $(call GstBuildPlugin,faad,faad support,audio,,+libfaad2))
 $(eval $(call GstBuildPlugin,festival,festival support,audio,,))

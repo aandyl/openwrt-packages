@@ -10,7 +10,7 @@
  	m4			\
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -522,7 +522,6 @@ top_srcdir = @top_srcdir@
+@@ -570,7 +570,6 @@ top_srcdir = @top_srcdir@
  DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
  ALWAYS_SUBDIRS = \
  	gst sys ext 		\

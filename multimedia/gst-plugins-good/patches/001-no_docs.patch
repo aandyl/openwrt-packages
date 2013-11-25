@@ -10,7 +10,7 @@
  	m4			\
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -523,7 +523,6 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-gtk
+@@ -571,7 +571,6 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-gtk
  ALWAYS_SUBDIRS = \
  	gst sys ext 		\
  	tests			\
