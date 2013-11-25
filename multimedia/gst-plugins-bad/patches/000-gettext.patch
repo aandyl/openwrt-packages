@@ -1,7 +1,7 @@
 --- a/configure.ac
 +++ b/configure.ac
-@@ -2373,7 +2373,6 @@ ext/swfdec/Makefile
- ext/timidity/Makefile
+@@ -2513,7 +2513,6 @@ ext/timidity/Makefile
+ ext/webp/Makefile
  ext/xvid/Makefile
  ext/zbar/Makefile
 -po/Makefile.in

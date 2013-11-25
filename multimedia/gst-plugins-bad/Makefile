@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gst-plugins-bad
-PKG_VERSION:=1.0.7
+PKG_VERSION:=1.2.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://gstreamer.freedesktop.org/src/gst-plugins-bad/
-PKG_MD5SUM:=d1493d1219b836a8cbf54f4fba962420
+PKG_MD5SUM:=8ee6863cbb917bb4bd235698b87192a4
 
 PKG_BUILD_DEPENDS:=gstreamer gst-plugins-base liboil
 
@@ -122,6 +122,13 @@ CONFIGURE_ARGS += \
 EXTRA_LDFLAGS+= \
 	-Wl,-rpath-link=$(STAGING_DIR)/usr/lib \
 
+# Necessary as of Nov 2013, because the default Build command passes all the
+# variables (like CC) to make, overriding the CC value of "gcc -std=c99" set by
+# configure
+define Build/Compile
+	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
+		DESTDIR="$(PKG_INSTALL_DIR)"
+endef
 
 define Package/gst-plugins-ugly/install
 	/bin/true
