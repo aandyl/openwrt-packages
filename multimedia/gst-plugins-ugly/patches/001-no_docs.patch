@@ -11,7 +11,7 @@
  include $(top_srcdir)/common/win32.mak
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -453,7 +453,7 @@ top_builddir = @top_builddir@
+@@ -503,7 +503,7 @@ top_builddir = @top_builddir@
  top_srcdir = @top_srcdir@
  DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
  SUBDIRS = \

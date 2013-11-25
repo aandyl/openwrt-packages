@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gst-plugins-ugly
-PKG_VERSION:=1.0.7
+PKG_VERSION:=1.2.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://gstreamer.freedesktop.org/src/gst-plugins-ugly/
-PKG_MD5SUM:=8754edf6c3be235f232fb75ad11708bb
+PKG_MD5SUM:=553332a8d5153e788a6612642a57f416
 
 PKG_BUILD_DEPENDS:= gstreamer gst-plugins-base liboil
 PKG_CONFIG_DEPENDS:= \
