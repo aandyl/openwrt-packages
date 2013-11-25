@@ -1,6 +1,6 @@
 --- a/gst/gstinfo.c
 +++ b/gst/gstinfo.c
-@@ -457,6 +457,39 @@ gst_debug_log (GstDebugCategory * catego
+@@ -438,6 +438,39 @@ gst_debug_log (GstDebugCategory * catego
    va_end (var_args);
  }
  
@@ -37,6 +37,6 @@
 +#endif
 +}
 +
- #ifdef _MSC_VER
+ #ifdef G_OS_WIN32
  /* based on g_basename(), which we can't use because it was deprecated */
  static inline const gchar *

@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gstreamer
-PKG_VERSION:=1.0.7
+PKG_VERSION:=1.2.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://gstreamer.freedesktop.org/src/gstreamer/
-PKG_MD5SUM:=8f6066a37c71a0d0ff5fe5f7687fea12
+PKG_MD5SUM:=55d50f48a496799dbb0b195c9c6c6153
 
 PKG_FIXUP:=autoreconf
 HOST_FIXUP:=autoreconf
