@@ -31,7 +31,7 @@ PKG_CONFIG_DEPENDS:= \
 	CONFIG_PACKAGE_gst-mod-volume \
 	CONFIG_PACKAGE_gst-mod-vorbis \
 
-HOST_BUILD_DEPENDS:=gstreamer/host liboil/host
+HOST_BUILD_DEPENDS:=gstreamer/host liboil/host gobject-introspection/host
 
 PKG_FIXUP:=autoreconf
 HOST_FIXUP:=autoreconf
