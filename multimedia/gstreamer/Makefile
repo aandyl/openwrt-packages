@@ -21,7 +21,7 @@ PKG_REMOVE_FILES:=autogen.sh aclocal.m4
 
 PKG_INSTALL:=1
 
-HOST_BUILD_DEPENDS:=glib2/host libxml2/host
+HOST_BUILD_DEPENDS:=glib2/host libxml2/host gobject-introspection/host
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
