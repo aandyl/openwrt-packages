@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rygel
 PKG_VERSION:=0.20.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GNOME/rygel/0.20/
@@ -205,6 +205,10 @@ define Package/librygel-media-engine-gst/install
 	$(INSTALL_DATA) \
 		$(PKG_INSTALL_DIR)/usr/lib/rygel-$(LIB_SUFFIX)/engines/librygel-media-engine-gst.so \
 		$(1)/usr/lib/rygel-$(LIB_SUFFIX)/engines
+
+	$(INSTALL_DATA) \
+		$(PKG_INSTALL_DIR)/usr/lib/rygel-$(LIB_SUFFIX)/engines/media-engine-gst.plugin \
+		$(1)/usr/lib/rygel-$(LIB_SUFFIX)/engines
 endef
 
 # 1: plugin name as used in shared library filename
@@ -220,6 +224,8 @@ define RygelBuildPlugin
   define Package/rygel-$(1)/install
 	$(INSTALL_DIR) $$(1)/usr/lib/rygel-$(LIB_SUFFIX)/plugins
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/rygel-$(LIB_SUFFIX)/plugins/librygel-$(1).so \
+		$$(1)/usr/lib/rygel-$(LIB_SUFFIX)/plugins
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/rygel-$(LIB_SUFFIX)/plugins/$(1).plugin \
 		$$(1)/usr/lib/rygel-$(LIB_SUFFIX)/plugins
   endef
 
