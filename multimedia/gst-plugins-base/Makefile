@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://gstreamer.freedesktop.org/src/gst-plugins-base/
-PKG_MD5SUM:=8ee6863cbb917bb4bd235698b87192a4
+PKG_MD5SUM:=2e75fb03ed7e4d24d88601fcac4d57aa
 
 PKG_BUILD_DEPENDS:= gstreamer liboil
 PKG_CONFIG_DEPENDS:= \
